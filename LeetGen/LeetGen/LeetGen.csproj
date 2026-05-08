@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LanguageHandlers/" />
+  </ItemGroup>
+
 </Project>
