@@ -18,6 +18,11 @@ public class CommandLineParser
             Description = "The directory where template files are located.",
             DefaultValueFactory = _ => "./debug-templates"
         };
+        Option<int> problemNumberOption = new("--problem")
+        {
+            Description = "The LeetCode problem number to generate code for.",
+            DefaultValueFactory = _ => 0
+        };
         Option<string> languageOption = new("--language")
         {
             Description = "The programming language for which to generate code.",
@@ -34,7 +39,8 @@ public class CommandLineParser
             outputDirectoryOption,
             templateDirectoryOption,
             languageOption,
-            debugOption
+            debugOption,
+            problemNumberOption
         };
         ParseResult parseResult = rootCommand.Parse(args);
 
@@ -45,6 +51,7 @@ public class CommandLineParser
             options.TemplateDirectory = parseResult.GetValue<string>(templateDirectoryOption) ?? "./debug-templates";
             options.Language = parseResult.GetValue<string>(languageOption) ?? string.Empty;
             options.isDebug = parseResult.GetValue<bool>(debugOption);
+            options.ProblemNumber = parseResult.GetValue<int>(problemNumberOption);
         }
         else
         {

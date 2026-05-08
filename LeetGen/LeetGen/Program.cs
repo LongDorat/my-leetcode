@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using LeetGen.LanguageHandlers;
+using System.CommandLine;
 
 namespace LeetGen;
 
@@ -9,14 +10,6 @@ class Program
     {
         CommandLineParser parser = new();
         ApplicationOptions options = parser.Parse(args);
-
-        if (options.isDebug)
-        {
-            CustomConsole.WriteLine("Debug mode is enabled.", new MessageType("info"));
-            Console.WriteLine($"\t\tOutput Directory: {options.OutputDirectory}");
-            Console.WriteLine($"\t\tTemplate Directory: {options.TemplateDirectory}");
-            Console.WriteLine($"\t\tLanguage: {options.Language}");
-        }
 
         var services = new ServiceCollection();
         services.AddSingleton<ILanguageHandler, CSharpHandler>();
@@ -51,6 +44,7 @@ class Program
         {
             options.OutputDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-output");
             options.TemplateDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-templates");
+            options.ProblemNumber = 1;
             options.Language = "csharp";
             return true;
         }
@@ -64,6 +58,12 @@ class Program
         if (!Directory.Exists(options.TemplateDirectory))
         {
             CustomConsole.WriteLine($"Template directory does not exist: {options.TemplateDirectory}", new MessageType("error"));
+            isSuccess = false;
+        }
+
+        if (options.ProblemNumber <= 0)
+        {
+            CustomConsole.WriteLine($"Invalid problem number: {options.ProblemNumber}. Problem number must be a positive integer.", new MessageType("error"));
             isSuccess = false;
         }
 
