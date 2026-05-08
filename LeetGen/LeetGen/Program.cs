@@ -74,6 +74,11 @@ class Program
             CustomConsole.WriteOptions("Supported languages are:", new MessageType("info"), supportedLanguages);
             isSuccess = false;
         }
+
+        if (options.isDebug)
+        {
+            return true;
+        }
         return isSuccess;
     }
 }
