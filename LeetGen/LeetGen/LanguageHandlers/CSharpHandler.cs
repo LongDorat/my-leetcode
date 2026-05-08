@@ -1,5 +1,3 @@
-using System;
-
 namespace LeetGen.LanguageHandlers;
 
 public class CSharpHandler : ILanguageHandler

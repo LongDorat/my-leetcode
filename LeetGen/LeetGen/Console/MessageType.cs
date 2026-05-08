@@ -1,6 +1,4 @@
-using System;
-
-namespace LeetGen;
+namespace LeetGen.Console;
 
 public class MessageType(string type)
 {

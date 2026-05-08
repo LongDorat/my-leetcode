@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using LeetGen.LanguageHandlers;
-using System.CommandLine;
 
 namespace LeetGen;
 
@@ -32,9 +30,9 @@ class Program
         {
             CustomConsole.WriteLine("Options validated successfully to debug mode.", new MessageType("info"));
             CustomConsole.WriteLine("Options after validation:", new MessageType("info"));
-            Console.WriteLine($"\t\tOutput Directory: {options.OutputDirectory}");
-            Console.WriteLine($"\t\tTemplate Directory: {options.TemplateDirectory}");
-            Console.WriteLine($"\t\tLanguage: {options.Language}");
+            System.Console.WriteLine($"\t\tOutput Directory: {options.OutputDirectory}");
+            System.Console.WriteLine($"\t\tTemplate Directory: {options.TemplateDirectory}");
+            System.Console.WriteLine($"\t\tLanguage: {options.Language}");
         }
     }
 

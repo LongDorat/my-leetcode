@@ -1,7 +1,6 @@
-using System;
 using System.CommandLine;
 
-namespace LeetGen;
+namespace LeetGen.Console;
 
 public class CommandLineParser
 {

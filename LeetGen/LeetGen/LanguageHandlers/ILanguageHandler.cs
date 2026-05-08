@@ -1,6 +1,4 @@
-using System;
-
-namespace LeetGen;
+namespace LeetGen.LanguageHandlers;
 
 public interface ILanguageHandler
 {
