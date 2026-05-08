@@ -40,11 +40,8 @@ class Program
     {
         if (options.isDebug)
         {
-            options.OutputDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-output");
-            options.TemplateDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-templates");
             options.ProblemNumber = 1;
             options.Language = "csharp";
-            return true;
         }
 
         bool isSuccess = true;
