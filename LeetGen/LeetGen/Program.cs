@@ -31,11 +31,54 @@ class Program
         }
         var languageHandler = languageHandlers?.FirstOrDefault(handler => string.Equals(handler.LanguageSlug, options.Language, StringComparison.OrdinalIgnoreCase));
 
-        if (languageHandler == null && languageHandlers != null /*Just to satisfy the nullability check*/)
+        if (!ValidateOptions(ref options, languageHandler, languageHandlers))
         {
-            CustomConsole.WriteLine($"The language is unsupported: '{options.Language}'.", new MessageType("error"));
-            CustomConsole.WriteOptions("Supported languages:", new MessageType("info"), languageHandlers.Select(h => h.LanguageSlug).ToArray());
             return;
         }
+        if (options.isDebug)
+        {
+            CustomConsole.WriteLine("Options validated successfully to debug mode.", new MessageType("info"));
+            CustomConsole.WriteLine("Options after validation:", new MessageType("info"));
+            Console.WriteLine($"\t\tOutput Directory: {options.OutputDirectory}");
+            Console.WriteLine($"\t\tTemplate Directory: {options.TemplateDirectory}");
+            Console.WriteLine($"\t\tLanguage: {options.Language}");
+        }
+    }
+
+    private static bool ValidateOptions(ref ApplicationOptions options, ILanguageHandler? currentHandler = null, IEnumerable<ILanguageHandler>? allHandlers = null)
+    {
+        if (options.isDebug)
+        {
+            options.OutputDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-output");
+            options.TemplateDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".debug-templates");
+            options.Language = "csharp";
+            return true;
+        }
+
+        bool isSuccess = true;
+        if (!Directory.Exists(options.OutputDirectory))
+        {
+            CustomConsole.WriteLine($"Output directory does not exist: {options.OutputDirectory}", new MessageType("error"));
+            isSuccess = false;
+        }
+        if (!Directory.Exists(options.TemplateDirectory))
+        {
+            CustomConsole.WriteLine($"Template directory does not exist: {options.TemplateDirectory}", new MessageType("error"));
+            isSuccess = false;
+        }
+
+        if (allHandlers == null)
+        {
+            CustomConsole.WriteLine("Language handler validation failed due to no available handlers.", new MessageType("error"));
+            isSuccess = false;
+        }
+        if (currentHandler == null && allHandlers != null /* Just to satisfy the compiler warning */)
+        {
+            CustomConsole.WriteLine($"Unsupported language: {options.Language}", new MessageType("error"));
+            var supportedLanguages = allHandlers.Select(h => h.LanguageSlug).ToArray();
+            CustomConsole.WriteOptions("Supported languages are:", new MessageType("info"), supportedLanguages);
+            isSuccess = false;
+        }
+        return isSuccess;
     }
 }
