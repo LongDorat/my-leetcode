@@ -19,5 +19,12 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
 
         GenerationPlan plan = new(Options, LanguageHandler!, LeetCodeDetails!);
         plan.Build();
+        if (Options.isDebug)
+        {
+            CustomConsole.WriteLine($"Output Directory: {plan.OutputDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Template Directory: {plan.TemplateDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Language: {plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Number: {plan.ProblemNumber}", new MessageType("info"));
+        }
     }
 }
