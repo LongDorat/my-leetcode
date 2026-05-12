@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="API/" />
     <Folder Include="Console/" />
     <Folder Include="Core/" />
     <Folder Include="LanguageHandlers/" />
@@ -22,6 +23,7 @@
     <Using Include="LeetGen.Console" />
     <Using Include="LeetGen.Core" />
     <Using Include="LeetGen.LanguageHandlers" />
+    <Using Include="LeetGen.API" />
     <Using Include="LeetGen" />
   </ItemGroup>
 

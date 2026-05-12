@@ -4,13 +4,20 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
 {
     public ApplicationOptions Options { get; set; } = options;
     public ILanguageHandler? LanguageHandler { get; set; } = languageHandler;
+    public IProblemDetailsAPI? LeetCodeDetails { get; set; }
 
     public async Task RunAsync()
     {
-        // Fetch problem details from the leetcode HTTP API
-        // Create an object of that fetch result, which contains the problem title, description, etc.
+        if (Options.isDebug)
+        {
+            LeetCodeDetails = new MockProblemDetails();
+        }
+        else
+        {
+            CustomConsole.WriteLine("No implementation for fetching problem details yet. Please use --debug for now.", new MessageType("error"));
+        }
 
-        // GenerationPlanBuilder planBuilder = new(Options, LanguageHandler, LeetCodeDetails);
-        // GenerationPlan plan = planBuilder.BuildPlan();
+        GenerationPlan plan = new(Options, LanguageHandler!, LeetCodeDetails!);
+        plan.Build();
     }
 }
