@@ -1,13 +1,18 @@
 namespace LeetGen.Core;
 
-public class Application(ApplicationOptions options, ILanguageHandler? languageHandler = null)
+public class Application
 {
-    public ApplicationOptions Options { get; set; } = options;
-    public ILanguageHandler? LanguageHandler { get; set; } = languageHandler;
+    public ApplicationOptions Options { get; set; }
+    public ILanguageHandler? LanguageHandler { get; set; }
     public IProblemDetailsAPI? LeetCodeDetails { get; set; }
 
-    public async Task GenerateAsync()
+    private readonly GenerationPlan _plan;
+
+    public Application(ApplicationOptions options, ILanguageHandler? languageHandler = null)
     {
+        Options = options;
+        LanguageHandler = languageHandler;
+
         if (Options.isDebug)
         {
             LeetCodeDetails = new MockProblemDetails();
@@ -17,36 +22,46 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
             CustomConsole.WriteLine("No implementation for fetching problem details yet. Please use --debug for now.", new MessageType("error"));
         }
 
-        GenerationPlan plan = new(Options, LanguageHandler!, LeetCodeDetails!);
-        plan.Build();
+        _plan = new GenerationPlan(Options, LanguageHandler!, LeetCodeDetails!);
+        _plan.Build();
+
         if (Options.isDebug)
         {
-            CustomConsole.WriteLine($"Output Directory: {plan.OutputDirectory}", new MessageType("info"));
-            CustomConsole.WriteLine($"Template Directory: {plan.TemplateDirectory}", new MessageType("info"));
-            CustomConsole.WriteLine($"Language: {plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
-            CustomConsole.WriteLine($"Problem Number: {plan.ProblemNumber}", new MessageType("info"));
-            CustomConsole.WriteLine($"Problem Slug: {plan.ProblemSlug}", new MessageType("info"));
+            CustomConsole.WriteLine($"Output Directory: {_plan.OutputDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Template Directory: {_plan.TemplateDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Language: {_plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Number: {_plan.ProblemNumber}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Slug: {_plan.ProblemSlug}", new MessageType("info"));
         }
+    }
 
-        if (!CopyTo(plan.TemplateDirectory, plan.OutputDirectory))
+    public async Task GenerateAsync()
+    {
+        if (!CopyTo(_plan.TemplateDirectory, _plan.OutputDirectory))
         {
             CustomConsole.WriteLine("Failed to copy template files to output directory.", new MessageType("error"));
             return;
         }
 
-        if (LanguageHandler != null && !LanguageHandler.ReplacePlaceHolders(plan.OutputDirectory))
+        if (LanguageHandler != null && !LanguageHandler.ReplacePlaceHolders(_plan.OutputDirectory))
         {
             CustomConsole.WriteLine("Failed to replace placeholders in the output directory.", new MessageType("error"));
             return;
         }
 
-        if (LanguageHandler != null && !LanguageHandler.Initialize(plan.OutputDirectory))
+        if (LanguageHandler != null && !LanguageHandler.Initialize(_plan.OutputDirectory))
         {
             CustomConsole.WriteLine("Failed to initialize language handler.", new MessageType("error"));
             return;
         }
 
         CustomConsole.WriteLine("Generation completed successfully!", new MessageType("success"));
+    }
+
+    public async Task RemoveAsync()
+    {
+        // Implementation for removing generated files
+        await Task.CompletedTask;
     }
 
     private bool CopyTo(string sourcePath, string destinationPath)
