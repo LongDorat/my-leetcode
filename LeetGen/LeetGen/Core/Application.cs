@@ -27,5 +27,48 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
             CustomConsole.WriteLine($"Problem Number: {plan.ProblemNumber}", new MessageType("info"));
             CustomConsole.WriteLine($"Problem Slug: {plan.ProblemSlug}", new MessageType("info"));
         }
+
+        if (!CopyTo(plan.TemplateDirectory, plan.OutputDirectory))
+        {
+            CustomConsole.WriteLine("Failed to copy template files to output directory.", new MessageType("error"));
+            return;
+        }
+    }
+
+    private bool CopyTo(string sourcePath, string destinationPath)
+    {
+        try
+        {
+            var sourceDirectory = new DirectoryInfo(sourcePath);
+            if (!sourceDirectory.Exists)
+            {
+                CustomConsole.WriteLine($"Source directory does not exist: {sourceDirectory.FullName}", new MessageType("error"));
+                return false;
+            }
+
+            Directory.CreateDirectory(destinationPath);
+
+            foreach (FileInfo file in sourceDirectory.GetFiles())
+            {
+                string destinationFilePath = Path.Combine(destinationPath, file.Name);
+                file.CopyTo(destinationFilePath, true);
+            }
+
+            foreach (DirectoryInfo subdirectory in sourceDirectory.GetDirectories())
+            {
+                string destinationSubdirectory = Path.Combine(destinationPath, subdirectory.Name);
+                if (!CopyTo(subdirectory.FullName, destinationSubdirectory))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            CustomConsole.WriteLine($"Error copying directory from {sourcePath} to {destinationPath}: {ex.Message}", new MessageType("error"));
+            return false;
+        }
     }
 }
