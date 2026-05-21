@@ -10,7 +10,8 @@ templateDirDebug=$currentDir/.debug-templates
 
 dotnet restore $projectDir
 
-if [ $1 == "debug" ]; then
+isDebug=false
+if [ "${1:-}" == "debug" ]; then
     mkdir -p $outputDirDebug
     mkdir -p $templateDirDebug
     dotnet build $projectDir -c Debug
@@ -25,9 +26,17 @@ read -p "What is the problem number? " problemNumber
 read -p "What is the programming language? " language
 
 if [ $action == "create" ]; then
-    if [ $isDebug ]; then
+    if [ $isDebug == "true" ]; then
         dotnet run --project $projectDir -c Debug -- create --output $outputDirDebug --template $templateDirDebug --problem $problemNumber --language $language --debug
     else
         dotnet run --project $projectDir -c Release -- create --output $outputDir --template $templateDir --problem $problemNumber --language $language
     fi
+elif [ $action == "remove" ]; then
+    if [ $isDebug == "true" ]; then
+        dotnet run --project $projectDir -c Debug -- remove --output $outputDirDebug --template $templateDirDebug --problem $problemNumber --language $language --debug
+    else
+        dotnet run --project $projectDir -c Release -- remove --output $outputDir --template $templateDir --problem $problemNumber --language $language
+    fi
+else
+    echo "Invalid action. Please choose 'create' or 'remove'."
 fi

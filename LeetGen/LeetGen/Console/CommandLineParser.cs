@@ -38,6 +38,7 @@ public class CommandLineParser
             BuildRemoveCommand()
         };
         ParseResult parseResult = rootCommand.Parse(args);
+        parseResult.Invoke();
 
         ApplicationOptions options = new();
         if (parseResult.Errors.Count == 0)
@@ -62,6 +63,8 @@ public class CommandLineParser
     {
         Command removeCommand = new("remove", "Remove generated LeetCode problem template")
         {
+            _outputDirectoryOption,
+            _templateDirectoryOption,
             _problemNumberOption,
             _languageOption,
             _debugOption

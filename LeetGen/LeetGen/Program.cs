@@ -42,7 +42,7 @@ class Program
         }
         else if (options.Command == "remove")
         {
-            //app.RemoveAsync().Wait();
+            app.RemoveAsync().Wait();
         }
     }
 
