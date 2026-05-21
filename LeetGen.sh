@@ -3,9 +3,9 @@
 currentDir=$(pwd)
 projectDir=$currentDir/LeetGen/LeetGen/
 outputDir=$currentDir/Problems/
-outputDirDebug=$currentDir/.debug-output/
+outputDirDebug=$currentDir/.debug-output
 templateDir=$currentDir/Templates/
-templateDirDebug=$currentDir/.debug-templates/
+templateDirDebug=$currentDir/.debug-templates
 
 dotnet restore $projectDir
 

@@ -22,18 +22,8 @@ public class GenerationPlan
 
     public void Build()
     {
-        StringBuilder outputPath = new();
-        outputPath.Append(_options.OutputDirectory);
-        outputPath.Append(Path.DirectorySeparatorChar);
-        outputPath.Append(LanguageHandler.LanguageSlug);
-        outputPath.Append(Path.DirectorySeparatorChar);
-        outputPath.Append($"{_options.ProblemNumber:D4}_{ProblemSlug}");
-        OutputDirectory = outputPath.ToString();
+        OutputDirectory = Path.Combine(_options.OutputDirectory, LanguageHandler.LanguageSlug, $"{_options.ProblemNumber:D4}_{ProblemSlug}");
 
-        StringBuilder templatePath = new();
-        templatePath.Append(_options.TemplateDirectory);
-        templatePath.Append(Path.DirectorySeparatorChar);
-        templatePath.Append(LanguageHandler.LanguageSlug);
-        TemplateDirectory = templatePath.ToString();
+        TemplateDirectory = Path.Combine(_options.TemplateDirectory, LanguageHandler.LanguageSlug);
     }
 }
