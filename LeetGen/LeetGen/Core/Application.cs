@@ -20,6 +20,7 @@ public class Application
         else
         {
             CustomConsole.WriteLine("No implementation for fetching problem details yet. Please use --debug for now.", new MessageType("error"));
+            Environment.Exit(1);
         }
 
         _plan = new GenerationPlan(Options, LanguageHandler!, LeetCodeDetails!);
