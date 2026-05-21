@@ -33,6 +33,20 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
             CustomConsole.WriteLine("Failed to copy template files to output directory.", new MessageType("error"));
             return;
         }
+
+        if (LanguageHandler != null && !LanguageHandler.ReplacePlaceHolders(plan.OutputDirectory))
+        {
+            CustomConsole.WriteLine("Failed to replace placeholders in the output directory.", new MessageType("error"));
+            return;
+        }
+
+        if (LanguageHandler != null && !LanguageHandler.Initialize(plan.OutputDirectory))
+        {
+            CustomConsole.WriteLine("Failed to initialize language handler.", new MessageType("error"));
+            return;
+        }
+
+        CustomConsole.WriteLine("Generation completed successfully!", new MessageType("success"));
     }
 
     private bool CopyTo(string sourcePath, string destinationPath)
