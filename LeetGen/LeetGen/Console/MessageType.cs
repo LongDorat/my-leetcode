@@ -7,6 +7,7 @@ public class MessageType(string type)
         "info" => "[INFO]\t",
         "warning" => "[WARN]\t",
         "error" => "[ERROR]\t",
+        "success" => "[GOOD]\t",
         _ => throw new ArgumentException("Invalid message type"),
     };
 
@@ -15,6 +16,7 @@ public class MessageType(string type)
         "info" => ConsoleColor.Green,
         "warning" => ConsoleColor.Yellow,
         "error" => ConsoleColor.Red,
+        "success" => ConsoleColor.Cyan,
         _ => ConsoleColor.White,
     };
 }
