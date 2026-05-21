@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace LeetGen.LanguageHandlers;
 
 public class CSharpHandler : ILanguageHandler
@@ -6,13 +8,37 @@ public class CSharpHandler : ILanguageHandler
 
     public bool ReplacePlaceHolders(string outputPath)
     {
-        // Implementation for replacing placeholders in C# code
+        CustomConsole.WriteLine(".NET project doesn't have any placeholders to replace, skipping this step.", new MessageType("info"));
         return true;
     }
 
     public bool Initialize(string outputPath)
     {
-        // Implementation for initializing C# handler
-        return true;
+        try
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "dotnet",
+                Arguments = "restore",
+                WorkingDirectory = outputPath,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var process = Process.Start(startInfo);
+            if (process == null)
+            {
+                return false;
+            }
+
+            process.WaitForExit();
+            return process.ExitCode == 0;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
