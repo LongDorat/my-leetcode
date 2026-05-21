@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 currentDir=$(pwd)
 projectDir=$currentDir/LeetGen/LeetGen/
