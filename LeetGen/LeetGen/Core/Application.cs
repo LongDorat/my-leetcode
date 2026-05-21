@@ -25,6 +25,7 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
             CustomConsole.WriteLine($"Template Directory: {plan.TemplateDirectory}", new MessageType("info"));
             CustomConsole.WriteLine($"Language: {plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
             CustomConsole.WriteLine($"Problem Number: {plan.ProblemNumber}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Slug: {plan.ProblemSlug}", new MessageType("info"));
         }
     }
 }
