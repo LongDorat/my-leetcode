@@ -60,7 +60,32 @@ public class Application
 
     public async Task RemoveAsync()
     {
-        // Implementation for removing generated files
+        string targetPath = _plan.OutputDirectory;
+        if (!Directory.Exists(targetPath))
+        {
+            CustomConsole.WriteLine($"Output directory does not exist: {targetPath}", new MessageType("error"));
+            return;
+        }
+
+        CustomConsole.WriteLine($"This will delete: {targetPath}", new MessageType("warning"));
+        System.Console.Write("Type 'yes' to confirm: ");
+        string? confirmation = System.Console.ReadLine();
+        if (!string.Equals(confirmation, "yes", StringComparison.OrdinalIgnoreCase))
+        {
+            CustomConsole.WriteLine("Remove cancelled.", new MessageType("info"));
+            return;
+        }
+
+        try
+        {
+            Directory.Delete(targetPath, true);
+            CustomConsole.WriteLine("Remove completed successfully!", new MessageType("success"));
+        }
+        catch (Exception ex)
+        {
+            CustomConsole.WriteLine($"Failed to remove output directory: {ex.Message}", new MessageType("error"));
+        }
+
         await Task.CompletedTask;
     }
 
