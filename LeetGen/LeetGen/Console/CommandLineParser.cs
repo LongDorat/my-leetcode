@@ -32,14 +32,17 @@ public class CommandLineParser
 
     public ApplicationOptions Parse(string[] args)
     {
-        RootCommand rootCommand = new("LeetGen - A LeetCode problem template generator");
-        Command createCommand = BuildCreateCommand();
-        rootCommand.Add(createCommand);
+        RootCommand rootCommand = new("LeetGen - A LeetCode problem template generator")
+        {
+            BuildCreateCommand(),
+            BuildRemoveCommand()
+        };
         ParseResult parseResult = rootCommand.Parse(args);
 
         ApplicationOptions options = new();
         if (parseResult.Errors.Count == 0)
         {
+            options.Command = parseResult.CommandResult?.Command.Name ?? string.Empty;
             options.OutputDirectory = parseResult.GetValue<string>(_outputDirectoryOption) ?? "./debug-output";
             options.TemplateDirectory = parseResult.GetValue<string>(_templateDirectoryOption) ?? "./debug-templates";
             options.Language = parseResult.GetValue<string>(_languageOption) ?? string.Empty;
@@ -53,6 +56,18 @@ public class CommandLineParser
             Environment.Exit(1);
         }
         return options;
+    }
+
+    private Command BuildRemoveCommand()
+    {
+        Command removeCommand = new("remove", "Remove generated LeetCode problem template")
+        {
+            _problemNumberOption,
+            _languageOption,
+            _debugOption
+        };
+
+        return removeCommand;
     }
 
     private Command BuildCreateCommand()

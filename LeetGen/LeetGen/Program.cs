@@ -36,7 +36,14 @@ class Program
         }
 
         Application app = new(options, languageHandler);
-        app.GenerateAsync().Wait();
+        if (options.Command == "create")
+        {
+            app.GenerateAsync().Wait();
+        }
+        else if (options.Command == "remove")
+        {
+            //app.RemoveAsync().Wait();
+        }
     }
 
     private static bool ValidateOptions(ref ApplicationOptions options, ILanguageHandler? currentHandler = null, IEnumerable<ILanguageHandler>? allHandlers = null)
