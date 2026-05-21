@@ -6,7 +6,7 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
     public ILanguageHandler? LanguageHandler { get; set; } = languageHandler;
     public IProblemDetailsAPI? LeetCodeDetails { get; set; }
 
-    public async Task RunAsync()
+    public async Task GenerateAsync()
     {
         if (Options.isDebug)
         {

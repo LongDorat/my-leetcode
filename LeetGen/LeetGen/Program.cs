@@ -36,7 +36,7 @@ class Program
         }
 
         Application app = new(options, languageHandler);
-        app.RunAsync().Wait();
+        app.GenerateAsync().Wait();
     }
 
     private static bool ValidateOptions(ref ApplicationOptions options, ILanguageHandler? currentHandler = null, IEnumerable<ILanguageHandler>? allHandlers = null)
