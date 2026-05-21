@@ -34,6 +34,9 @@ class Program
             System.Console.WriteLine($"\t\tTemplate Directory: {options.TemplateDirectory}");
             System.Console.WriteLine($"\t\tLanguage: {options.Language}");
         }
+
+        Application app = new(options, languageHandler);
+        app.RunAsync().Wait();
     }
 
     private static bool ValidateOptions(ref ApplicationOptions options, ILanguageHandler? currentHandler = null, IEnumerable<ILanguageHandler>? allHandlers = null)
