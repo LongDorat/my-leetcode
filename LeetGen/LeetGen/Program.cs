@@ -50,7 +50,7 @@ class Program
     {
         if (options.isDebug)
         {
-            options.ProblemNumber = 1;
+            //options.ProblemNumber = 1;
             options.Language = "csharp";
         }
 

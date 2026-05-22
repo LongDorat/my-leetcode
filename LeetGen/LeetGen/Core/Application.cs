@@ -13,15 +13,17 @@ public class Application
         Options = options;
         LanguageHandler = languageHandler;
 
+        CustomConsole.WriteLine($"Pulling problem details for problem number {Options.ProblemNumber}...", new MessageType("info"));
         if (Options.isDebug)
         {
-            LeetCodeDetails = new MockProblemDetails();
+            //LeetCodeDetails = new MockProblemDetails();
+            LeetCodeDetails = new LeetCodeDetails();
         }
         else
         {
-            CustomConsole.WriteLine("No implementation for fetching problem details yet. Please use --debug for now.", new MessageType("error"));
-            Environment.Exit(1);
+            LeetCodeDetails = new LeetCodeDetails();
         }
+        LeetCodeDetails.FetchDetails(Options.ProblemNumber);
 
         _plan = new GenerationPlan(Options, LanguageHandler!, LeetCodeDetails!);
         _plan.Build();
