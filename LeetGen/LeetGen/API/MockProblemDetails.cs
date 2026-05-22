@@ -13,7 +13,7 @@ public class MockProblemDetails : IProblemDetailsAPI
         Slug = "two-sum";
     }
 
-    public void FetchDetails()
+    public void FetchDetails(int problemId)
     {
         // Mock implementation, does nothing
     }
