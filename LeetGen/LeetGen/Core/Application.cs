@@ -44,13 +44,13 @@ public class Application
             return;
         }
 
-        if (LanguageHandler != null && !LanguageHandler.ReplacePlaceHolders(_plan.OutputDirectory))
+        if (LanguageHandler != null && !LanguageHandler.ReplacePlaceHolders(_plan))
         {
             CustomConsole.WriteLine("Failed to replace placeholders in the output directory.", new MessageType("error"));
             return;
         }
 
-        if (LanguageHandler != null && !LanguageHandler.Initialize(_plan.OutputDirectory))
+        if (LanguageHandler != null && !LanguageHandler.Initialize(_plan))
         {
             CustomConsole.WriteLine("Failed to initialize language handler.", new MessageType("error"));
             return;

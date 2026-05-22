@@ -6,13 +6,13 @@ public class CSharpHandler : ILanguageHandler
 {
     public string LanguageSlug => "csharp";
 
-    public bool ReplacePlaceHolders(string outputPath)
+    public bool ReplacePlaceHolders(GenerationPlan plan)
     {
         CustomConsole.WriteLine(".NET project doesn't have any placeholders to replace, skipping this step.", new MessageType("info"));
         return true;
     }
 
-    public bool Initialize(string outputPath)
+    public bool Initialize(GenerationPlan plan)
     {
         try
         {
@@ -20,7 +20,7 @@ public class CSharpHandler : ILanguageHandler
             {
                 FileName = "dotnet",
                 Arguments = "restore",
-                WorkingDirectory = outputPath,
+                WorkingDirectory = plan.OutputDirectory,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
