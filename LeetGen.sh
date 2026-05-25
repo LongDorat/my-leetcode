@@ -21,9 +21,20 @@ else
 fi
 
 echo "================================"
-read -p "Build complete. Do you want create or remove a project? (create/remove) " action
+read -p "Build complete. Create or remove a project? (create(1)/remove(2)) " action
 read -p "What is the problem number? " problemNumber
 read -p "What is the programming language? " language
+echo "================================"
+
+action=$(printf '%s' "$action" | tr '[:upper:]' '[:lower:]')
+case "$action" in
+    c|create|1)
+        action="create"
+        ;;
+    r|remove|2)
+        action="remove"
+        ;;
+esac
 
 if [ $action == "create" ]; then
     if [ $isDebug == "true" ]; then
