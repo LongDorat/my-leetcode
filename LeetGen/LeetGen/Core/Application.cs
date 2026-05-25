@@ -1,45 +1,21 @@
 namespace LeetGen.Core;
 
-public class Application
+public class Application(ApplicationOptions options, ILanguageHandler? languageHandler = null)
 {
-    public ApplicationOptions Options { get; set; }
-    public ILanguageHandler? LanguageHandler { get; set; }
+    public ApplicationOptions Options { get; set; } = options;
+    public ILanguageHandler? LanguageHandler { get; set; } = languageHandler;
     public IProblemDetailsAPI? LeetCodeDetails { get; set; }
 
-    private readonly GenerationPlan _plan;
-
-    public Application(ApplicationOptions options, ILanguageHandler? languageHandler = null)
-    {
-        Options = options;
-        LanguageHandler = languageHandler;
-
-        CustomConsole.WriteLine($"Pulling problem details for problem number {Options.ProblemNumber}...", new MessageType("info"));
-        if (Options.isDebug)
-        {
-            //LeetCodeDetails = new MockProblemDetails();
-            LeetCodeDetails = new LeetCodeDetails();
-        }
-        else
-        {
-            LeetCodeDetails = new LeetCodeDetails();
-        }
-        LeetCodeDetails.FetchDetails(Options.ProblemNumber);
-
-        _plan = new GenerationPlan(Options, LanguageHandler!, LeetCodeDetails!);
-        _plan.Build();
-
-        if (Options.isDebug)
-        {
-            CustomConsole.WriteLine($"Output Directory: {_plan.OutputDirectory}", new MessageType("info"));
-            CustomConsole.WriteLine($"Template Directory: {_plan.TemplateDirectory}", new MessageType("info"));
-            CustomConsole.WriteLine($"Language: {_plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
-            CustomConsole.WriteLine($"Problem Number: {_plan.ProblemNumber}", new MessageType("info"));
-            CustomConsole.WriteLine($"Problem Slug: {_plan.ProblemSlug}", new MessageType("info"));
-        }
-    }
+    private GenerationPlan? _plan;
 
     public async Task GenerateAsync()
     {
+        InitializePlanForGeneration();
+        if (_plan == null)
+        {
+            return;
+        }
+
         if (!CopyTo(_plan.TemplateDirectory, _plan.OutputDirectory))
         {
             CustomConsole.WriteLine("Failed to copy template files to output directory.", new MessageType("error"));
@@ -63,7 +39,27 @@ public class Application
 
     public async Task RemoveAsync()
     {
-        string targetPath = _plan.OutputDirectory;
+        if (LanguageHandler == null)
+        {
+            CustomConsole.WriteLine("Language handler is not available.", new MessageType("error"));
+            return;
+        }
+
+        string languageFolder = Path.Combine(Options.OutputDirectory, LanguageHandler.LanguageSlug);
+        if (!Directory.Exists(languageFolder))
+        {
+            CustomConsole.WriteLine($"Language directory does not exist: {languageFolder}", new MessageType("error"));
+            return;
+        }
+
+        string searchPattern = $"{Options.ProblemNumber:D4}_*";
+        string? targetPath = Directory.GetDirectories(languageFolder, searchPattern).FirstOrDefault();
+        if (string.IsNullOrEmpty(targetPath))
+        {
+            CustomConsole.WriteLine($"No folder found for problem {Options.ProblemNumber} in {languageFolder}", new MessageType("error"));
+            return;
+        }
+
         if (!Directory.Exists(targetPath))
         {
             CustomConsole.WriteLine($"Output directory does not exist: {targetPath}", new MessageType("error"));
@@ -90,6 +86,39 @@ public class Application
         }
 
         await Task.CompletedTask;
+    }
+
+    private void InitializePlanForGeneration()
+    {
+        if (LanguageHandler == null)
+        {
+            CustomConsole.WriteLine("Language handler is not available.", new MessageType("error"));
+            return;
+        }
+
+        CustomConsole.WriteLine($"Pulling problem details for problem number {Options.ProblemNumber}...", new MessageType("info"));
+        if (Options.isDebug)
+        {
+            //LeetCodeDetails = new MockProblemDetails();
+            LeetCodeDetails = new LeetCodeDetails();
+        }
+        else
+        {
+            LeetCodeDetails = new LeetCodeDetails();
+        }
+        LeetCodeDetails.FetchDetails(Options.ProblemNumber);
+
+        _plan = new GenerationPlan(Options, LanguageHandler, LeetCodeDetails);
+        _plan.Build();
+
+        if (Options.isDebug)
+        {
+            CustomConsole.WriteLine($"Output Directory: {_plan.OutputDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Template Directory: {_plan.TemplateDirectory}", new MessageType("info"));
+            CustomConsole.WriteLine($"Language: {_plan.LanguageHandler.LanguageSlug}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Number: {_plan.ProblemNumber}", new MessageType("info"));
+            CustomConsole.WriteLine($"Problem Slug: {_plan.ProblemSlug}", new MessageType("info"));
+        }
     }
 
     private bool CopyTo(string sourcePath, string destinationPath)
