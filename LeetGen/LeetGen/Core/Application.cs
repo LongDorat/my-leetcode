@@ -16,6 +16,18 @@ public class Application(ApplicationOptions options, ILanguageHandler? languageH
             return;
         }
 
+        if (Directory.Exists(_plan.OutputDirectory))
+        {
+            CustomConsole.WriteLine($"Output directory already exists: {_plan.OutputDirectory}", new MessageType("warning"));
+            System.Console.Write("Type 'yes' to overwrite: ");
+            string? confirmation = System.Console.ReadLine();
+            if (!string.Equals(confirmation, "yes", StringComparison.OrdinalIgnoreCase))
+            {
+                CustomConsole.WriteLine("Generation cancelled.", new MessageType("info"));
+                return;
+            }
+        }
+
         if (!CopyTo(_plan.TemplateDirectory, _plan.OutputDirectory))
         {
             CustomConsole.WriteLine("Failed to copy template files to output directory.", new MessageType("error"));
