@@ -12,6 +12,7 @@ class Program
         var services = new ServiceCollection();
         services.AddSingleton<ILanguageHandler, CSharpHandler>();
         services.AddSingleton<ILanguageHandler, JavaHandler>();
+        services.AddSingleton<ILanguageHandler, CppHandler>();
         // Add other language handlers here as needed
 
         var serviceProvider = services.BuildServiceProvider();
