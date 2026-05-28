@@ -5,7 +5,14 @@
         "ghcr.io/devcontainers/features/dotnet": {
             "version": "10.0"
         },
-        "ghcr.io/devcontainers/features/common-utils": {},
+        "ghcr.io/devcontainers/features/java:1.8.0": {
+            "version": "25",
+            "installMaven": "true"
+        },
+        "ghcr.io/devcontainers-extra/features/cmake": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/common-utils:latest": {},
         "ghcr.io/devcontainers/features/sshd": {
             "version": "latest"
         }
@@ -13,7 +20,10 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-dotnettools.csdevkit"
+                "ms-dotnettools.csdevkit",
+                "ms-dotnettools.csharp",
+                "ms-vscode.cpptools-extension-pack",
+                "vscjava.vscode-java-pack"
             ]
         }
     },
